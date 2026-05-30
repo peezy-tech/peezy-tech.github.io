@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="peezy.tech">
+  <rect width="64" height="64" rx="12" fill="#07100c"/>
+  <path d="M16 43V17h20.5c7 0 11.5 4 11.5 10.1S43.5 37 36.5 37H25v6H16Zm9-14h10.6c2.2 0 3.4-.7 3.4-2.1 0-1.5-1.2-2.2-3.4-2.2H25V29Z" fill="#f5f3ea"/>
+  <path d="M16 49h32" stroke="#8fcf8f" stroke-width="4" stroke-linecap="round"/>
+</svg>

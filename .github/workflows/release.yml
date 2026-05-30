@@ -1,0 +1,58 @@
+name: Release Obsidian plugin
+
+on:
+  push:
+    # Only fire for our namespaced Obsidian tags
+    tags:
+      - obsidian-v*
+    # Optional: limit to relevant path changes
+    paths:
+      - "apps/obsidian/**"
+      - ".github/workflows/release.yml"
+
+jobs:
+  build:
+    # Double safety: only run on our namespaced tags
+    if: startsWith(github.ref_name, 'obsidian-v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Type check
+        run: |
+          bun install
+          bun --filter obsidian-plugin check
+
+      - name: Build plugin
+        run: |
+          cd apps/obsidian
+          bun build.js production
+
+      - name: Verify tag matches manifest version
+        run: |
+          tag="${GITHUB_REF_NAME#obsidian-v}"
+          manifest_version=$(node -e "console.log(require('./apps/obsidian/manifest.json').version)")
+          echo "Tag version: $tag"
+          echo "Manifest version: $manifest_version"
+          if [ "$tag" != "$manifest_version" ]; then
+            echo "Tag ($tag) does not match manifest ($manifest_version)" >&2
+            exit 1
+          fi
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          gh release create "$tag" \
+            --title="$tag" \
+            apps/obsidian/build/main.js \
+            apps/obsidian/manifest.json \
+            $([ -f apps/obsidian/build/styles.css ] && echo "apps/obsidian/build/styles.css" || true)
