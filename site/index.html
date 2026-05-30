@@ -12,11 +12,12 @@
     <meta property="og:url" content="https://peezy.tech/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="/styles.css" />
+    <script src="/script.js" defer></script>
   </head>
   <body>
     <main class="link-shell">
       <nav aria-label="peezy.tech links">
-        <ul class="link-list">
+        <ul class="link-list" data-link-list>
           <li>
             <a href="https://patch.moi/" rel="noopener noreferrer">patch.moi</a>
           </li>
@@ -34,9 +35,7 @@
             >
           </li>
           <li>
-            <a href="https://github.com/peezy-tech" rel="noopener noreferrer"
-              >GitHub</a
-            >
+            <button type="button" data-show-forks>our forks</button>
           </li>
         </ul>
       </nav>
