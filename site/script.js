@@ -1,13 +1,19 @@
 const linkList = document.querySelector("[data-link-list]");
 const showForks = document.querySelector("[data-show-forks]");
 
+const mainLinks = [
+  ["patch.moi", "https://patch.moi/"],
+  ["jojo.build", "https://jojo.build/"],
+  ["load.game", "https://load.game/"],
+  ["pledge.cash", "https://pledge.cash/"],
+];
+
 const forkLinks = [
   ["codex fork", "https://github.com/peezy-tech/codex"],
   ["jojo.build", "https://jojo.build/peezy-tech/jojo"],
-  ["x402", "https://github.com/peezy-tech/x402"],
 ];
 
-const renderLinks = (links) => {
+const renderItems = (links, action) => {
   if (!linkList) return;
 
   linkList.replaceChildren(
@@ -22,16 +28,45 @@ const renderLinks = (links) => {
 
       return item;
     }),
+    ...(action
+      ? [
+          (() => {
+            const item = document.createElement("li");
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.textContent = action.label;
+            button.addEventListener("click", action.onClick);
+            item.append(button);
+
+            return item;
+          })(),
+        ]
+      : []),
   );
 };
 
-showForks?.addEventListener("click", () => {
+const transitionTo = (render) => {
   if (!linkList) return;
 
   linkList.classList.add("is-changing");
 
   window.setTimeout(() => {
-    renderLinks(forkLinks);
+    render();
     linkList.classList.remove("is-changing");
   }, 180);
-});
+};
+
+const showMainLinks = () => {
+  transitionTo(() =>
+    renderItems(mainLinks, { label: "our forks", onClick: showForkLinks }),
+  );
+};
+
+const showForkLinks = () => {
+  transitionTo(() =>
+    renderItems(forkLinks, { label: "back", onClick: showMainLinks }),
+  );
+};
+
+showForks?.addEventListener("click", showForkLinks);
