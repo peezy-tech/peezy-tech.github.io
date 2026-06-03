@@ -1,5 +1,6 @@
 const linkList = document.querySelector("[data-link-list]");
 const showForks = document.querySelector("[data-show-forks]");
+const showPackages = document.querySelector("[data-show-packages]");
 
 const mainLinks = [
   ["patch.moi", "https://patch.moi/"],
@@ -13,7 +14,12 @@ const forkLinks = [
   ["jojo.build", "https://jojo.build/peezy-tech/jojo"],
 ];
 
-const renderItems = (links, action) => {
+const packageLinks = [
+  ["x402-hl", "https://www.npmjs.com/package/x402-hl"],
+  ["codex-toys", "https://www.npmjs.com/package/codex-toys"],
+];
+
+const renderItems = (links, actions = []) => {
   if (!linkList) return;
 
   linkList.replaceChildren(
@@ -28,21 +34,17 @@ const renderItems = (links, action) => {
 
       return item;
     }),
-    ...(action
-      ? [
-          (() => {
-            const item = document.createElement("li");
-            const button = document.createElement("button");
+    ...actions.map((action) => {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
 
-            button.type = "button";
-            button.textContent = action.label;
-            button.addEventListener("click", action.onClick);
-            item.append(button);
+      button.type = "button";
+      button.textContent = action.label;
+      button.addEventListener("click", action.onClick);
+      item.append(button);
 
-            return item;
-          })(),
-        ]
-      : []),
+      return item;
+    }),
   );
 };
 
@@ -59,14 +61,24 @@ const transitionTo = (render) => {
 
 const showMainLinks = () => {
   transitionTo(() =>
-    renderItems(mainLinks, { label: "our forks", onClick: showForkLinks }),
+    renderItems(mainLinks, [
+      { label: "our forks", onClick: showForkLinks },
+      { label: "packages", onClick: showPackageLinks },
+    ]),
   );
 };
 
 const showForkLinks = () => {
   transitionTo(() =>
-    renderItems(forkLinks, { label: "back", onClick: showMainLinks }),
+    renderItems(forkLinks, [{ label: "back", onClick: showMainLinks }]),
+  );
+};
+
+const showPackageLinks = () => {
+  transitionTo(() =>
+    renderItems(packageLinks, [{ label: "back", onClick: showMainLinks }]),
   );
 };
 
 showForks?.addEventListener("click", showForkLinks);
+showPackages?.addEventListener("click", showPackageLinks);
