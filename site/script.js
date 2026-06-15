@@ -1,5 +1,4 @@
 const linkList = document.querySelector("[data-link-list]");
-const showForks = document.querySelector("[data-show-forks]");
 const showPackages = document.querySelector("[data-show-packages]");
 
 const mainLinks = [
@@ -7,11 +6,6 @@ const mainLinks = [
   ["jojo.build", "https://jojo.build/"],
   ["load.game", "https://load.game/"],
   ["pledge.cash", "https://pledge.cash/"],
-];
-
-const forkLinks = [
-  ["codex fork", "https://github.com/peezy-tech/codex"],
-  ["jojo.build", "https://jojo.build/peezy-tech/jojo"],
 ];
 
 const packageLinks = [
@@ -61,16 +55,7 @@ const transitionTo = (render) => {
 
 const showMainLinks = () => {
   transitionTo(() =>
-    renderItems(mainLinks, [
-      { label: "our forks", onClick: showForkLinks },
-      { label: "packages", onClick: showPackageLinks },
-    ]),
-  );
-};
-
-const showForkLinks = () => {
-  transitionTo(() =>
-    renderItems(forkLinks, [{ label: "back", onClick: showMainLinks }]),
+    renderItems(mainLinks, [{ label: "packages", onClick: showPackageLinks }]),
   );
 };
 
@@ -80,5 +65,4 @@ const showPackageLinks = () => {
   );
 };
 
-showForks?.addEventListener("click", showForkLinks);
 showPackages?.addEventListener("click", showPackageLinks);
